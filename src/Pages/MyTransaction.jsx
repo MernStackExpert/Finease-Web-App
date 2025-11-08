@@ -157,7 +157,7 @@ const MyTransaction = () => {
                   </p>
                   <div className="card-actions justify-end mt-4 space-x-2">
                     <Link
-                      to={`/transaction-details/${t._id}`}
+                      to={`/transaction-detailes/${t._id}`}
                       className="btn btn-ghost btn-circle"
                       title="View Details"
                     >
