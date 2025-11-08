@@ -54,7 +54,7 @@ const AddTransaction = () => {
     const date = form.date.value;
 
     if (!category || !amount || !description || !date) {
-      toast.error("Please fill all fields.");
+      toast("Please fill all fields.");
       return;
     }
 
@@ -75,7 +75,7 @@ const AddTransaction = () => {
       form.reset();
       setTransactionType("Expense");
     } catch (error) {
-      toast.error("Failed to add transaction", error);
+      toast("Failed to add transaction", error);
     }
   };
   return (
@@ -134,7 +134,7 @@ const AddTransaction = () => {
                     Select a category
                   </option>
                   {categoriesToShow.map((category) => (
-                    <option key={category.value} value={category.value}>
+                    <option className=" bg-base-100" key={category.value} value={category.value}>
                       {category.label}
                     </option>
                   ))}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import {
   ResponsiveContainer,
   PieChart,
@@ -14,7 +14,7 @@ import {
 } from "recharts";
 import { FaFilter, FaChartPie, FaChartBar } from "react-icons/fa";
 import { useAxios } from "../Hooks/useAxios";
-import { AuthContext } from "../Provider/AuthContext"; // আপনার ব্যবহার করা অথ কনটেক্সট
+import { AuthContext } from "../Provider/AuthContext";
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"];
 const months = [
@@ -32,8 +32,7 @@ const Reports = () => {
   const [barChartData, setBarChartData] = useState([]);
   const [allCategories, setAllCategories] = useState([]);
 
-  // ডেটা জেনারেট করার মূল ফাংশন
-  const generateReports = (baseData, month, category) => {
+  const generateReports = useCallback((baseData, month, category) => {
     let filtered = [...baseData];
     
     if (month) {
@@ -46,7 +45,6 @@ const Reports = () => {
       filtered = filtered.filter((item) => item.category === category);
     }
 
-    // পাই চার্টের জন্য শুধু Expense ডেটা
     const categoryTotals = {};
     filtered.forEach((t) => {
       if (t.type.toLowerCase() === "expense") {
@@ -60,7 +58,6 @@ const Reports = () => {
     }));
     setPieChartData(pieData);
 
-    // বার চার্টের জন্য Income vs Expense
     const monthTotals = {};
     filtered.forEach((t) => {
       const date = new Date(t.date);
@@ -81,10 +78,9 @@ const Reports = () => {
     }
     
     setBarChartData(barData);
-  };
+  }, []);
 
-  // সব ট্রানজ্যাকশন ফেচ করার ফাংশন
-  const fetchTransactions = async () => {
+  const fetchTransactions = useCallback(async () => {
     try {
       const res = await axios.get(`/transactions?email=${user?.email}`);
       const data = res.data || [];
@@ -93,23 +89,23 @@ const Reports = () => {
       const uniqueCategories = [...new Set(data.map((t) => t.category))];
       setAllCategories(uniqueCategories);
       
-      // *** সমাধান: পেজ লোড হওয়ার পর প্রথমবার চার্ট জেনারেট করা ***
       generateReports(data, "", ""); 
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [axios, user?.email, generateReports]);
 
   useEffect(() => {
     if (user?.email) {
       fetchTransactions();
     }
-  }, [user?.email]);
+  }, [user?.email, fetchTransactions]);
 
-  // *** সমাধান: শুধু বাটনে ক্লিক করলেই ফিল্টার হবে ***
-  const handleFilterClick = () => {
-    generateReports(transactions, selectedMonth, selectedCategory);
-  };
+  useEffect(() => {
+    if (transactions.length > 0) {
+      generateReports(transactions, selectedMonth, selectedCategory);
+    }
+  }, [transactions, selectedMonth, selectedCategory, generateReports]);
 
   return (
     <div className="min-h-screen p-4 md:p-8 bg-base-200">
@@ -121,10 +117,10 @@ const Reports = () => {
           <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
             <FaFilter /> Filters
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="form-control">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="form-control flex flex-col">
               <label className="label">
-                <span className="label-text">Filter by Month</span>
+                <span className="label-text mb-2">Filter by Month</span>
               </label>
               <select
                 className="select select-bordered"
@@ -139,9 +135,9 @@ const Reports = () => {
                 ))}
               </select>
             </div>
-            <div className="form-control">
+            <div className="form-control flex flex-col">
               <label className="label">
-                <span className="label-text">Filter by Category</span>
+                <span className="label-text mb-2">Filter by Category</span>
               </label>
               <select
                 className="select select-bordered"
@@ -155,14 +151,6 @@ const Reports = () => {
                   </option>
                 ))}
               </select>
-            </div>
-            <div className="form-control md:self-end">
-              <button
-                onClick={handleFilterClick}
-                className="btn btn-primary w-full"
-              >
-                Apply Filters
-              </button>
             </div>
           </div>
         </div>
@@ -199,11 +187,11 @@ const Reports = () => {
                     <Legend />
                   </PieChart>
                 ) : (
-                  <div className="flex items-center justify-center h-full text-gray-500 mt-20 w-70">
+                  <div className="flex items-center justify-center h-full text-gray-500 w-70 mt-15">
                     No expense data to display for this filter.
                   </div>
                 )}
-              </ResponsiveContainer>r
+              </ResponsiveContainer>
             </div>
           </div>
 
@@ -227,8 +215,8 @@ const Reports = () => {
                     <Bar dataKey="expense" fill="#EF4444" />
                   </BarChart>
                 ) : (
-                  <div className="flex items-center justify-center h-full text-gray-500  mt-20 w-70">
-                    No income/expense data to display for this filter.
+                  <div className="flex items-center justify-center h-full text-gray-500  w-70 mt-15">
+                    No data to display for this filter.
                   </div>
                 )}
               </ResponsiveContainer>
