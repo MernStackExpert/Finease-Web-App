@@ -93,7 +93,7 @@ const Navbar = () => {
               </li>
 
               <li>
-                <a href="">My Profile</a>
+                <Link to={"/my-profile"}>My Profile</Link>
               </li>
               <li>
                 <a onClick={handleLogOut}>Logout</a>

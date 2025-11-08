@@ -9,6 +9,7 @@ import AddTransaction from "../Pages/AddTransaction";
 import Reports from "../Pages/Reports";
 import TransactionDetails from "../Pages/TransactionDetails";
 import UpdateTransaction from "../Pages/UpdateTransaction";
+import MyProfile from "../Pages/MyProfile";
 
 export const router = createBrowserRouter([
   {
@@ -85,6 +86,14 @@ export const router = createBrowserRouter([
           return res.json();
         },
       },
+      {
+        path:"/my-profile",
+         element: (
+          <PrivetRoute>
+            <MyProfile></MyProfile>
+          </PrivetRoute>
+        ),
+      }
     ],
   },
 ]);
