@@ -10,6 +10,7 @@ import Reports from "../Pages/Reports";
 import TransactionDetails from "../Pages/TransactionDetails";
 import UpdateTransaction from "../Pages/UpdateTransaction";
 import MyProfile from "../Pages/MyProfile";
+import NotFound from "../Pages/NotFound";
 
 export const router = createBrowserRouter([
   {
@@ -61,7 +62,7 @@ export const router = createBrowserRouter([
         ),
         loader: async ({ params }) => {
           const res = await fetch(
-            `http://localhost:3000/transactions/${params.id}`
+            `https://asigement-server.vercel.app/transactions/${params.id}`
           );
           if (!res.ok) {
             throw new Response("Transaction not found", { status: 404 });
@@ -78,7 +79,7 @@ export const router = createBrowserRouter([
         ),
         loader: async ({ params }) => {
           const res = await fetch(
-            `http://localhost:3000/transactions/${params.id}`
+            `https://asigement-server.vercel.app/transactions/${params.id}`
           );
           if (!res.ok) {
             throw new Response("Transaction not found", { status: 404 });
@@ -87,13 +88,17 @@ export const router = createBrowserRouter([
         },
       },
       {
-        path:"/my-profile",
-         element: (
+        path: "/my-profile",
+        element: (
           <PrivetRoute>
             <MyProfile></MyProfile>
           </PrivetRoute>
         ),
-      }
+      },
     ],
   },
+  {
+    path:"*",
+    element:<NotFound></NotFound>
+  }
 ]);

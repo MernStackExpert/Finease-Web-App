@@ -1,9 +1,9 @@
-import axios from "axios"
+import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:3000"
-})
+  baseURL: "https://asigement-server.vercel.app",
+});
 
 export const useAxios = () => {
-  return axiosInstance
-}
+  return axiosInstance;
+};
