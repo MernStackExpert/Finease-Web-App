@@ -1,4 +1,3 @@
-
 import { createBrowserRouter } from "react-router";
 import Home from "../Pages/Home";
 import Root from "../Layouts/Root";
@@ -8,42 +7,66 @@ import PrivetRoute from "./PrivetRoute";
 import MyTransaction from "../Pages/MyTransaction";
 import AddTransaction from "../Pages/AddTransaction";
 import Reports from "../Pages/Reports";
+import TransactionDetails from "../Pages/TransactionDetails";
 
 export const router = createBrowserRouter([
   {
-    path:"/",
-    Component:Root,
-    children:[
+    path: "/",
+    Component: Root,
+    children: [
       {
-        index:true,
-        Component:Home
+        index: true,
+        Component: Home,
       },
       {
-        path:"/auth/login",
-        Component:Login
+        path: "/auth/login",
+        Component: Login,
       },
       {
-        path:"/auth/register",
-        Component:Register
+        path: "/auth/register",
+        Component: Register,
       },
       {
-        path:"/my-transaction",
-        element:<PrivetRoute>
-          <MyTransaction></MyTransaction>
-        </PrivetRoute>
+        path: "/my-transaction",
+        element: (
+          <PrivetRoute>
+            <MyTransaction></MyTransaction>
+          </PrivetRoute>
+        ),
       },
       {
-        path:"/add-transaction",
-        element:<PrivetRoute>
-          <AddTransaction></AddTransaction>
-        </PrivetRoute>
+        path: "/add-transaction",
+        element: (
+          <PrivetRoute>
+            <AddTransaction></AddTransaction>
+          </PrivetRoute>
+        ),
       },
       {
-        path:"/reports",
-         element:<PrivetRoute>
-          <Reports></Reports>
-        </PrivetRoute>
-      }
-    ]
-  }
-])
+        path: "/reports",
+        element: (
+          <PrivetRoute>
+            <Reports></Reports>
+          </PrivetRoute>
+        ),
+      },
+      {
+        path: "/transaction-detailes/:id",
+        element: (
+          <PrivetRoute>
+            <TransactionDetails></TransactionDetails>
+          </PrivetRoute>
+        ),
+        loader: async ({ params }) => {
+          const res = await fetch(
+            `http://localhost:3000/transactions/${params.id}`
+          );
+          if (!res.ok) {
+            throw new Response("Transaction not found", { status: 404 });
+          }
+          return res.json();
+        },
+      },
+    ],
+  },
+]);

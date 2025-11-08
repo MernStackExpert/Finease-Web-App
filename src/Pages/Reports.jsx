@@ -203,7 +203,7 @@ const Reports = () => {
                     No expense data to display for this filter.
                   </div>
                 )}
-              </ResponsiveContainer>
+              </ResponsiveContainer>r
             </div>
           </div>
 
