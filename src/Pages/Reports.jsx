@@ -1,30 +1,18 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
-import {
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-  Legend,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-} from "recharts";
 import { FaFilter, FaChartPie, FaChartBar } from "react-icons/fa";
 import { useAxios } from "../Hooks/useAxios";
 import { AuthContext } from "../Provider/AuthContext";
+import PieChart from "../Components/PieChart";
+import BarChart from "../Components/BarChart";
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"];
 const months = [
   "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
+  "July", "August", "September", "October", "November", "December",
 ];
 
 const Reports = () => {
   const axios = useAxios();
-  const { user } = useContext(AuthContext); 
+  const { user } = useContext(AuthContext);
   const [transactions, setTransactions] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -34,7 +22,7 @@ const Reports = () => {
 
   const generateReports = useCallback((baseData, month, category) => {
     let filtered = [...baseData];
-    
+
     if (month) {
       filtered = filtered.filter((item) => {
         const date = new Date(item.date);
@@ -71,33 +59,33 @@ const Reports = () => {
         monthTotals[monthName].expense += parseFloat(t.amount);
       }
     });
-    
+
     let barData = Object.values(monthTotals);
     if (month) {
-      barData = barData.filter(m => m.month === month);
+      barData = barData.filter((m) => m.month === month);
     }
-    
+
     setBarChartData(barData);
   }, []);
 
   const fetchTransactions = useCallback(async () => {
     try {
-      const res = await axios.get(`/transactions?email=${user?.email}` ,{
-         headers: {
-        authorization: `Bearer ${user?.accessToken}`
-      }
+      const res = await axios.get(`/transactions?email=${user?.email}`, {
+        headers: {
+          authorization: `Bearer ${user?.accessToken}`,
+        },
       });
       const data = res.data || [];
       setTransactions(data);
-      
+
       const uniqueCategories = [...new Set(data.map((t) => t.category))];
       setAllCategories(uniqueCategories);
-      
-      generateReports(data, "", ""); 
+
+      generateReports(data, "", "");
     } catch (error) {
       console.log(error);
     }
-  }, [axios, user?.email, generateReports]);
+  }, [axios, user?.email, user?.accessToken, generateReports]);
 
   useEffect(() => {
     if (user?.email) {
@@ -113,7 +101,6 @@ const Reports = () => {
 
   return (
     <div className="min-h-screen p-4 md:p-8 bg-base-200">
-            <title>FinEase - Reports</title>
       <div className="max-w-7xl mx-auto">
         <h2 className="text-3xl font-bold text-center text-primary mb-10">
           Financial Reports
@@ -165,67 +152,14 @@ const Reports = () => {
             <h3 className="text-xl font-semibold mb-4 text-center flex items-center justify-center gap-2">
               <FaChartPie /> Expense by Category
             </h3>
-            <div style={{ width: "100%", height: 300 }}>
-              <ResponsiveContainer>
-                {pieChartData.length > 0 ? (
-                  <PieChart>
-                    <Pie
-                      data={pieChartData}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      outerRadius={100}
-                      fill="#8884d8"
-                      dataKey="value"
-                      label={({ name, percent }) =>
-                        `${name} (${(percent * 100).toFixed(0)}%)`
-                      }
-                    >
-                      {pieChartData.map((entry, index) => (
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={COLORS[index % COLORS.length]}
-                        />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                    <Legend />
-                  </PieChart>
-                ) : (
-                  <div className="flex items-center justify-center h-full text-gray-500 w-70 mt-15">
-                    No expense data to display for this filter.
-                  </div>
-                )}
-              </ResponsiveContainer>
-            </div>
+            <PieChart pieChartData={pieChartData} />
           </div>
 
           <div className="card bg-base-100 shadow-lg p-6">
             <h3 className="text-xl font-semibold mb-4 text-center flex items-center justify-center gap-2">
               <FaChartBar /> Monthly Income vs Expense
             </h3>
-            <div style={{ width: "100%", height: 300 }}>
-              <ResponsiveContainer>
-                {barChartData.length > 0 ? (
-                  <BarChart
-                    data={barChartData}
-                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="month" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="income" fill="#22C55E" />
-                    <Bar dataKey="expense" fill="#EF4444" />
-                  </BarChart>
-                ) : (
-                  <div className="flex items-center justify-center h-full text-gray-500  w-70 mt-15">
-                    No data to display for this filter.
-                  </div>
-                )}
-              </ResponsiveContainer>
-            </div>
+            <BarChart barChartData={barChartData} />
           </div>
         </div>
       </div>

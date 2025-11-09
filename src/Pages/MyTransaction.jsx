@@ -5,8 +5,9 @@ import { useAuthContext } from "../Context/useAuthContext";
 import { useAxios } from "../Hooks/useAxios";
 import { Link } from "react-router";
 import Swal from "sweetalert2";
-import { FaPencilAlt, FaTrash, FaEye, FaCalendarAlt } from "react-icons/fa";
+// import { FaPencilAlt, FaTrash, FaEye, FaCalendarAlt } from "react-icons/fa";
 import { motion } from "framer-motion";
+import TransactionCard from "../Components/TransactionCard";
 
 const MyTransaction = () => {
   const axios = useAxios();
@@ -98,6 +99,7 @@ const MyTransaction = () => {
 
   return (
     <div className="min-h-screen p-4 md:p-8 bg-base-200">
+                  <title>FinEase - MyTransaction</title>
       <div className="max-w-7xl mx-auto">
         <h2 className="text-3xl font-bold text-center text-primary mb-10">
           My Transactions
@@ -151,61 +153,7 @@ const MyTransaction = () => {
             animate="visible"
           >
             {transactions.map((t) => (
-              <motion.div
-                key={t._id}
-                className="card bg-base-100 shadow-xl transition-transform transform hover:-translate-y-2 h-[22rem]"
-                variants={cardVariants}
-              >
-                <div className="card-body flex flex-col">
-                  <div className="flex justify-between items-start">
-                    <span
-                      className={`badge badge-lg font-semibold ${
-                        t.type === "Income"
-                          ? "badge-success text-white"
-                          : "badge-error text-white"
-                      }`}
-                    >
-                      {t.type}
-                    </span>
-                    <span className="font-semibold text-lg">
-                      ${t.amount.toFixed(2)}
-                    </span>
-                  </div>
-                  <h2 className="card-title mt-4">{t.category}</h2>
-                  <p className="text-gray-500 text-sm flex items-center gap-2">
-                    <FaCalendarAlt />
-                    {new Date(t.date).toLocaleDateString()}
-                  </p>
-                  <p className="mt-2 text-gray-600 flex-grow overflow-hidden">
-                    {t.description.length > 100
-                      ? t.description.substring(0, 100) + "..."
-                      : t.description}
-                  </p>
-                  <div className="card-actions justify-end mt-4 space-x-2">
-                    <Link
-                      to={`/transaction-details/${t._id}`}
-                      className="btn btn-ghost btn-circle"
-                      title="View Details"
-                    >
-                      <FaEye className="text-info text-xl" />
-                    </Link>
-                    <Link
-                      to={`/update-transaction/${t._id}`}
-                      className="btn btn-ghost btn-circle"
-                      title="Update"
-                    >
-                      <FaPencilAlt className="text-warning text-xl" />
-                    </Link>
-                    <button
-                      onClick={() => handleDelete(t._id)}
-                      className="btn btn-ghost btn-circle"
-                      title="Delete"
-                    >
-                      <FaTrash className="text-error text-xl" />
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
+              <TransactionCard key={t._id} t={t} cardVariants={cardVariants} handleDelete={handleDelete}></TransactionCard>
             ))}
           </motion.div>
         )}

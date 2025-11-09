@@ -34,7 +34,7 @@ const Footer = () => {
           <h6 className="footer-title">Social Media</h6>
           <div className="grid grid-flow-col gap-4 text-2xl">
             <a
-              href="https://facebook.com"
+              href="https://www.facebook.com/share/166gwpyLVW/"
               target="_blank"
               rel="noreferrer"
               className="link link-hover"

@@ -100,6 +100,8 @@ const Register = () => {
 
   return (
     <div className="hero min-h-screen bg-base-200 mt-15">
+                  <title>FinEase - Auth - REGISTER</title>
+
       <div className="hero-content flex-col lg:flex-row-reverse">
         <div className="text-center lg:text-left lg:ml-10">
           <h1 className="text-5xl font-bold">Register now!</h1>
