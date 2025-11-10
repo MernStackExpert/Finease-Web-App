@@ -61,9 +61,16 @@ export const router = createBrowserRouter([
           </PrivetRoute>
         ),
         loader: async ({ params }) => {
+          const token = localStorage.getItem("access-token");
           const res = await fetch(
-            `https://asigement-server.vercel.app/transactions/${params.id}`
+            `https://asigement-server.vercel.app/transactions/${params.id}`,
+            {
+              headers: {
+                authorization: `Bearer ${token}`,
+              },
+            }
           );
+
           if (!res.ok) {
             throw new Response("Transaction not found", { status: 404 });
           }
@@ -78,8 +85,14 @@ export const router = createBrowserRouter([
           </PrivetRoute>
         ),
         loader: async ({ params }) => {
+          const token = localStorage.getItem("access-token");
           const res = await fetch(
-            `https://asigement-server.vercel.app/transactions/${params.id}`
+            `https://asigement-server.vercel.app/transactions/${params.id}`,
+            {
+              headers: {
+                authorization: `Bearer ${token}`,
+              },
+            }
           );
           if (!res.ok) {
             throw new Response("Transaction not found", { status: 404 });

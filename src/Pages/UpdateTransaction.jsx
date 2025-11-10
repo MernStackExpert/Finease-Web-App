@@ -68,7 +68,17 @@ const UpdateTransaction = () => {
     };
 
     try {
-      await axios.patch(`/transactions/${loadedTransaction._id}`, updatedData);
+      const token = localStorage.getItem("access-token");
+
+      await axios.patch(
+        `/transactions/${loadedTransaction._id}`, 
+        updatedData,
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
+      );
       Swal.fire({
         position: "top-center",
         icon: "success",
@@ -76,7 +86,7 @@ const UpdateTransaction = () => {
         showConfirmButton: false,
         timer: 1500,
       });
-      navigate("/my-transaction");
+      navigate(`/transaction-detailes/${loadedTransaction._id}`);
     } catch (error) {
       console.error(error);
       toast("Failed to update transaction.");

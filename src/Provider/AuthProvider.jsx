@@ -42,14 +42,24 @@ const AuthProvider = ({ children }) => {
     });
   };
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser || null); // currentUser না থাকলে null
-      setLoading(false);
-    });
+useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+    if (currentUser) {
+      const token = await currentUser.getIdToken();
+      localStorage.setItem("access-token", token);
+      setUser(currentUser);
+    } else {
+      localStorage.removeItem("access-token");
+      setUser(null);
+    }
 
-    return () => unsubscribe(); // cleanup
-  }, []);
+    setLoading(false);
+  });
+
+  return () => unsubscribe();
+}, []);
+
+
   const authInfo = {
     googleLogin,
     user,

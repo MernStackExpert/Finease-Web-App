@@ -14,8 +14,6 @@ import { Link, useLoaderData } from 'react-router';
 const TransactionDetails = () => {
   const loaderData = useLoaderData();
 
-  console.log(loaderData)
-
   const { transaction, categoryTotal } = loaderData || {};
 
   if (!transaction) {

@@ -50,12 +50,12 @@ const MyTransaction = () => {
     } catch (error) {
       console.log(error);
       Swal.fire({
-              position: "top-center",
-              icon: "error",
-              title: "Failed to fetch transactions",
-              showConfirmButton: false,
-              timer: 1500,
-            });
+        position: "top-center",
+        icon: "error",
+        title: "Failed to fetch transactions",
+        showConfirmButton: false,
+        timer: 1500,
+      });
       setLoading(false);
     }
   }, [axios, user?.email, sortField, sortOrder, user?.accessToken]);
@@ -78,7 +78,13 @@ const MyTransaction = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.delete(`/transactions/${id}`);
+          const token = localStorage.getItem("access-token");
+
+          await axios.delete(`/transactions/${id}`, {
+            headers: {
+              authorization: `Bearer ${token}`,
+            },
+          });
           toast.success("Transaction deleted successfully!");
           setTransactions(transactions.filter((t) => t._id !== id));
         } catch (error) {
@@ -99,7 +105,7 @@ const MyTransaction = () => {
 
   return (
     <div className="min-h-screen p-4 md:p-8 bg-base-200">
-                  <title>FinEase - MyTransaction</title>
+      <title>FinEase - MyTransaction</title>
       <div className="max-w-7xl mx-auto">
         <h2 className="text-3xl font-bold text-center text-primary mb-10">
           My Transactions
@@ -153,7 +159,12 @@ const MyTransaction = () => {
             animate="visible"
           >
             {transactions.map((t) => (
-              <TransactionCard key={t._id} t={t} cardVariants={cardVariants} handleDelete={handleDelete}></TransactionCard>
+              <TransactionCard
+                key={t._id}
+                t={t}
+                cardVariants={cardVariants}
+                handleDelete={handleDelete}
+              ></TransactionCard>
             ))}
           </motion.div>
         )}

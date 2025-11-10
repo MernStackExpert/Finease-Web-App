@@ -73,7 +73,13 @@ const AddTransaction = () => {
     };
 
     try {
-      await axios.post("/transactions", transactionData);
+      const token = localStorage.getItem("access-token");
+
+      await axios.post("/transactions", transactionData, {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      });
       Swal.fire({
         position: "top-center",
         icon: "success",
