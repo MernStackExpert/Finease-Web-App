@@ -11,6 +11,8 @@ import TransactionDetails from "../Pages/TransactionDetails";
 import UpdateTransaction from "../Pages/UpdateTransaction";
 import MyProfile from "../Pages/MyProfile";
 import NotFound from "../Pages/NotFound";
+import Contact from "../Pages/Contact";
+import Services from "../Pages/Services";
 
 export const router = createBrowserRouter([
   {
@@ -28,6 +30,14 @@ export const router = createBrowserRouter([
       {
         path: "/auth/register",
         Component: Register,
+      },
+      {
+        path: "/contact",
+        Component: Contact,
+      },
+      {
+        path: "/services",
+        Component: Services,
       },
       {
         path: "/my-transaction",
@@ -63,7 +73,7 @@ export const router = createBrowserRouter([
         loader: async ({ params }) => {
           const token = localStorage.getItem("access-token");
           const res = await fetch(
-            `https://asigement-server.vercel.app/transactions/${params.id}`,
+            `http://localhost:3000//transactions/${params.id}`,
             {
               headers: {
                 authorization: `Bearer ${token}`,
@@ -87,7 +97,7 @@ export const router = createBrowserRouter([
         loader: async ({ params }) => {
           const token = localStorage.getItem("access-token");
           const res = await fetch(
-            `https://asigement-server.vercel.app/transactions/${params.id}`,
+            `http://localhost:3000//transactions/${params.id}`,
             {
               headers: {
                 authorization: `Bearer ${token}`,

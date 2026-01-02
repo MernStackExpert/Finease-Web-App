@@ -51,6 +51,30 @@ const links = (
         Home
       </NavLink>
     </li>
+    <li>
+      <NavLink
+        to="/contact"
+        className={({ isActive }) =>
+          isActive
+            ? "text-purple-600 font-semibold border-b-2 border-purple-600"
+            : "text-gray-700 hover:text-purple-500"
+        }
+      >
+        Contact
+      </NavLink>
+    </li>
+    <li>
+      <NavLink
+        to="/services"
+        className={({ isActive }) =>
+          isActive
+            ? "text-purple-600 font-semibold border-b-2 border-purple-600"
+            : "text-gray-700 hover:text-purple-500"
+        }
+      >
+        Services
+      </NavLink>
+    </li>
 
     {user && (
       <>
