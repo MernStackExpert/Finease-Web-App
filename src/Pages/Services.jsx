@@ -42,7 +42,7 @@ const services = [
 
 const Services = () => {
   return (
-    <div className="min-h-screen pt-20 pb-10 bg-base-100">
+    <div className="min-h-screen pt-20 pb-10 bg-base-100 max-w-[1400px] mx-auto">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <motion.h1 

@@ -99,7 +99,7 @@ export const router = createBrowserRouter([
         loader: async ({ params }) => {
           const token = localStorage.getItem("access-token");
           const res = await fetch(
-            `http://localhost:3000//transactions/${params.id}`,
+            `http://localhost:3000/transactions/${params.id}`,
             {
               headers: {
                 authorization: `Bearer ${token}`,
