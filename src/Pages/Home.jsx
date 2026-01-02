@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import { AuthContext } from "../Provider/AuthContext";
 import { useAxios } from "../Hooks/useAxios";
 import Features from "../Components/Home/Features";
@@ -12,8 +12,6 @@ import CallToAction from "../Components/Home/CallToAction";
 import Hero from "../Components/Home/Hero";
 import Stats from "../Components/Home/Stats";
 
-// Components
-
 const Home = () => {
   const [loading, setLoading] = useState(true);
   const { user } = useContext(AuthContext);
@@ -24,36 +22,47 @@ const Home = () => {
     expense: 0,
   });
 
+  const fetchTransactions = useCallback(async () => {
+    if (!user?.email) {
+      setLoading(false);
+      return;
+    }
+    
+    setLoading(true);
+    try {
+      const res = await axios.get(`/transactions?email=${user.email}&size=1000`);
+      const transactions = res.data.transactions || [];
+      
+      let income = 0;
+      let expense = 0;
+      
+      transactions.forEach((t) => {
+        const amt = parseFloat(t.amount || 0);
+        if (t.type?.toLowerCase() === "income") {
+          income += amt;
+        } else if (t.type?.toLowerCase() === "expense") {
+          expense += amt;
+        }
+      });
+      
+      setFinancialData({ income, expense, balance: income - expense });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }, [user?.email, axios]);
+
   useEffect(() => {
-    const fetchTransactions = async () => {
-      if (!user?.email) return;
-      setLoading(true);
-      try {
-        const res = await axios.get(`/transactions?email=${user.email}`);
-        const transactions = res.data || [];
-        let income = 0;
-        let expense = 0;
-        transactions.forEach((t) => {
-          if (t.type.toLowerCase() === "income") income += parseFloat(t.amount);
-          else if (t.type.toLowerCase() === "expense")
-            expense += parseFloat(t.amount);
-        });
-        setFinancialData({ income, expense, balance: income - expense });
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchTransactions();
-  }, [user?.email]);
+  }, [fetchTransactions]);
 
   return (
-    <div className="bg-base-100 overflow-hidden max-w-[1400px] mx-auto">
+    <div className="bg-base-100 overflow-hidden max-w-[1440px] mx-auto">
       <title>FinEase | Master Your Money</title>
 
       <Hero />
-      <div className="container mx-auto px-4 space-y-24 py-10">
+      <div className="container mx-auto px-4 space-y-24 py-12 md:py-20">
         <Stats user={user} loading={loading} data={financialData} />
         <Features />
         <AppStatistics />

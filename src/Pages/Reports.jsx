@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
-import { FaFilter, FaChartPie, FaChartBar } from "react-icons/fa";
+import { FaFilter, FaChartPie, FaChartBar, FaCalendarAlt, FaLayerGroup } from "react-icons/fa";
 import { useAxios } from "../Hooks/useAxios";
 import { AuthContext } from "../Provider/AuthContext";
 import PieChart from "../Components/PieChart";
 import BarChart from "../Components/BarChart";
+import { motion } from "framer-motion";
 
 const months = [
   "January", "February", "March", "April", "May", "June",
@@ -19,6 +20,7 @@ const Reports = () => {
   const [pieChartData, setPieChartData] = useState([]);
   const [barChartData, setBarChartData] = useState([]);
   const [allCategories, setAllCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const generateReports = useCallback((baseData, month, category) => {
     let filtered = [...baseData];
@@ -35,16 +37,12 @@ const Reports = () => {
 
     const categoryTotals = {};
     filtered.forEach((t) => {
-      if (t.type.toLowerCase() === "expense") {
-        categoryTotals[t.category] =
-          (categoryTotals[t.category] || 0) + parseFloat(t.amount);
+      if (t.type?.toLowerCase() === "expense") {
+        categoryTotals[t.category] = (categoryTotals[t.category] || 0) + parseFloat(t.amount || 0);
       }
     });
-    const pieData = Object.entries(categoryTotals).map(([name, value]) => ({
-      name,
-      value,
-    }));
-    setPieChartData(pieData);
+    
+    setPieChartData(Object.entries(categoryTotals).map(([name, value]) => ({ name, value })));
 
     const monthTotals = {};
     filtered.forEach((t) => {
@@ -53,115 +51,123 @@ const Reports = () => {
       if (!monthTotals[monthName]) {
         monthTotals[monthName] = { month: monthName, income: 0, expense: 0 };
       }
-      if (t.type.toLowerCase() === "income") {
-        monthTotals[monthName].income += parseFloat(t.amount);
-      } else if (t.type.toLowerCase() === "expense") {
-        monthTotals[monthName].expense += parseFloat(t.amount);
+      if (t.type?.toLowerCase() === "income") {
+        monthTotals[monthName].income += parseFloat(t.amount || 0);
+      } else if (t.type?.toLowerCase() === "expense") {
+        monthTotals[monthName].expense += parseFloat(t.amount || 0);
       }
     });
 
-    let barData = Object.values(monthTotals);
-    if (month) {
-      barData = barData.filter((m) => m.month === month);
-    }
-
-    setBarChartData(barData);
+    setBarChartData(Object.values(monthTotals));
   }, []);
 
   const fetchTransactions = useCallback(async () => {
     try {
+      setLoading(true);
       const res = await axios.get(`/transactions?email=${user?.email}`, {
-        headers: {
-          authorization: `Bearer ${user?.accessToken}`,
-        },
+        params: { size: 1000 },
+        headers: { authorization: `Bearer ${user?.accessToken}` },
       });
-      const data = res.data || [];
+      const data = Array.isArray(res.data) ? res.data : res.data.transactions || [];
       setTransactions(data);
-
-      const uniqueCategories = [...new Set(data.map((t) => t.category))];
-      setAllCategories(uniqueCategories);
-
-      generateReports(data, "", "");
+      setAllCategories([...new Set(data.map((t) => t.category))]);
+      generateReports(data, selectedMonth, selectedCategory);
     } catch (error) {
-      console.log(error);
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
-  }, [axios, user?.email, user?.accessToken, generateReports]);
+  }, [axios, user?.email, user?.accessToken, generateReports, selectedMonth, selectedCategory]);
 
   useEffect(() => {
-    if (user?.email) {
-      fetchTransactions();
-    }
+    if (user?.email) fetchTransactions();
   }, [user?.email, fetchTransactions]);
 
-  useEffect(() => {
-    if (transactions.length > 0) {
-      generateReports(transactions, selectedMonth, selectedCategory);
-    }
-  }, [transactions, selectedMonth, selectedCategory, generateReports]);
+  if (loading) return (
+    <div className="min-h-screen flex justify-center items-center bg-base-200">
+      <span className="loading loading-spinner loading-lg text-primary"></span>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen p-4 md:p-8 bg-base-200">
-      <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl font-bold text-center text-primary mb-10">
-          Financial Reports
-        </h2>
-        <div className="card bg-base-100 shadow-lg p-6 mb-8">
-          <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-            <FaFilter /> Filters
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="form-control flex flex-col">
-              <label className="label">
-                <span className="label-text mb-2">Filter by Month</span>
+    <div className="min-h-screen p-4 md:p-8 bg-base-200 pt-24">
+      <div className="max-w-[1440px] mx-auto">
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }} 
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-12"
+        >
+          <h2 className="text-4xl font-black text-base-content uppercase tracking-tight">
+            Financial <span className="text-primary">Reports</span>
+          </h2>
+          <p className="text-base-content/60 mt-2">Analyze your income and expenses with visual insights</p>
+        </motion.div>
+
+        <div className="bg-base-100 rounded-[2.5rem] p-6 md:p-10 shadow-xl border border-base-300 mb-10">
+          <div className="flex items-center gap-2 mb-8 border-b border-base-200 pb-4 text-xl font-black uppercase tracking-widest text-base-content/70">
+            <FaFilter className="text-primary" /> Filter Statistics
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="form-control">
+              <label className="label font-bold text-xs uppercase opacity-60 flex gap-2">
+                <FaCalendarAlt /> Select Month
               </label>
               <select
-                className="select select-bordered"
+                className="select select-bordered rounded-2xl bg-base-200 border-none focus:ring-2 focus:ring-primary h-14"
                 value={selectedMonth}
                 onChange={(e) => setSelectedMonth(e.target.value)}
               >
                 <option value="">All Months</option>
-                {months.map((month) => (
-                  <option key={month} value={month}>
-                    {month}
-                  </option>
-                ))}
+                {months.map((m) => <option key={m} value={m}>{m}</option>)}
               </select>
             </div>
-            <div className="form-control flex flex-col">
-              <label className="label">
-                <span className="label-text mb-2">Filter by Category</span>
+            <div className="form-control">
+              <label className="label font-bold text-xs uppercase opacity-60 flex gap-2">
+                <FaLayerGroup /> Select Category
               </label>
               <select
-                className="select select-bordered"
+                className="select select-bordered rounded-2xl bg-base-200 border-none focus:ring-2 focus:ring-primary h-14"
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
               >
                 <option value="">All Categories</option>
-                {allCategories.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
-                ))}
+                {allCategories.map((cat) => <option key={cat} value={cat}>{cat}</option>)}
               </select>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="card bg-base-100 shadow-lg p-6">
-            <h3 className="text-xl font-semibold mb-4 text-center flex items-center justify-center gap-2">
-              <FaChartPie /> Expense by Category
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+          <motion.div 
+            whileHover={{ y: -5 }}
+            className="bg-base-100 rounded-[2.5rem] p-8 shadow-xl border border-base-300 min-h-[450px]"
+          >
+            <h3 className="text-xl font-black mb-8 text-center flex items-center justify-center gap-3 text-base-content/80">
+              <FaChartPie className="text-primary" /> EXPENSE DISTRIBUTION
             </h3>
-            <PieChart pieChartData={pieChartData} />
-          </div>
+            <div className="w-full h-[300px]">
+              <PieChart pieChartData={pieChartData} />
+            </div>
+          </motion.div>
 
-          <div className="card bg-base-100 shadow-lg p-6">
-            <h3 className="text-xl font-semibold mb-4 text-center flex items-center justify-center gap-2">
-              <FaChartBar /> Monthly Income vs Expense
+          <motion.div 
+            whileHover={{ y: -5 }}
+            className="bg-base-100 rounded-[2.5rem] p-8 shadow-xl border border-base-300 min-h-[450px]"
+          >
+            <h3 className="text-xl font-black mb-8 text-center flex items-center justify-center gap-3 text-base-content/80">
+              <FaChartBar className="text-secondary" /> INCOME VS EXPENSE
             </h3>
-            <BarChart barChartData={barChartData} />
-          </div>
+            <div className="w-full h-[300px]">
+              <BarChart barChartData={barChartData} />
+            </div>
+          </motion.div>
         </div>
+
+        {!transactions.length && (
+          <div className="mt-10 p-12 bg-base-100 rounded-[2.5rem] text-center border-2 border-dashed border-base-300">
+            <p className="text-xl font-bold opacity-30 uppercase tracking-widest">No Data Available for selected filters</p>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -71,9 +71,7 @@ const Services = () => {
                 </div>
                 <h2 className="card-title text-2xl mb-2">{service.title}</h2>
                 <p className="text-base-content/70">{service.desc}</p>
-                <div className="card-actions mt-4">
-                  <button className="btn btn-sm btn-outline btn-primary rounded-full px-6">Learn More</button>
-                </div>
+               
               </div>
             </motion.div>
           ))}

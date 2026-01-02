@@ -21,7 +21,16 @@ const Navbar = () => {
     setTheme(theme === "light" ? "dark" : "light");
   };
 
+  // মেনু অটো ক্লোজ করার ফাংশন
+  const closeMenu = () => {
+    const elem = document.activeElement;
+    if (elem) {
+      elem.blur();
+    }
+  };
+
   const handleLogOut = async () => {
+    closeMenu();
     try {
       await logOut();
       toast.success("LogOut Successful ✅");
@@ -40,6 +49,7 @@ const Navbar = () => {
     <>
       <li>
         <NavLink
+          onClick={closeMenu}
           to="/"
           className={({ isActive }) =>
             isActive
@@ -52,6 +62,7 @@ const Navbar = () => {
       </li>
       <li>
         <NavLink
+          onClick={closeMenu}
           to="/contact"
           className={({ isActive }) =>
             isActive
@@ -64,6 +75,7 @@ const Navbar = () => {
       </li>
       <li>
         <NavLink
+          onClick={closeMenu}
           to="/services"
           className={({ isActive }) =>
             isActive
@@ -79,6 +91,7 @@ const Navbar = () => {
         <>
           <li>
             <NavLink
+              onClick={closeMenu}
               to="/add-transaction"
               className={({ isActive }) =>
                 isActive
@@ -91,6 +104,7 @@ const Navbar = () => {
           </li>
           <li>
             <NavLink
+              onClick={closeMenu}
               to="/my-transaction"
               className={({ isActive }) =>
                 isActive
@@ -103,6 +117,7 @@ const Navbar = () => {
           </li>
           <li>
             <NavLink
+              onClick={closeMenu}
               to="/reports"
               className={({ isActive }) =>
                 isActive
@@ -203,7 +218,7 @@ const Navbar = () => {
                 </li>
                 <div className="divider my-0 opacity-20"></div>
                 <li>
-                  <Link to="/my-profile" className="py-3">My Profile</Link>
+                  <Link onClick={closeMenu} to="/my-profile" className="py-3">My Profile</Link>
                 </li>
                 <li>
                   <button

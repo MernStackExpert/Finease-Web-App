@@ -13,6 +13,8 @@ import MyProfile from "../Pages/MyProfile";
 import NotFound from "../Pages/NotFound";
 import Contact from "../Pages/Contact";
 import Services from "../Pages/Services";
+import DashboardLayout from "../Layouts/DashboardLayout";
+import DashboardHome from "../Pages/Dashbord/DashboardHome";
 
 export const router = createBrowserRouter([
   {
@@ -73,7 +75,7 @@ export const router = createBrowserRouter([
         loader: async ({ params }) => {
           const token = localStorage.getItem("access-token");
           const res = await fetch(
-            `http://localhost:3000//transactions/${params.id}`,
+            `http://localhost:3000/transactions/${params.id}`,
             {
               headers: {
                 authorization: `Bearer ${token}`,
@@ -118,6 +120,21 @@ export const router = createBrowserRouter([
           </PrivetRoute>
         ),
       },
+    ],
+  },
+  {
+    path: "/dashboard",
+    element: (
+      <PrivetRoute>
+        <DashboardLayout />
+      </PrivetRoute>
+    ),
+    children: [
+      { index: true, element: <DashboardHome /> },
+      { path: "add-transaction", element: <AddTransaction /> },
+      { path: "my-transaction", element: <MyTransaction /> },
+      { path: "reports", element: <Reports /> },
+      { path: "profile", element: <MyProfile /> },
     ],
   },
   {
