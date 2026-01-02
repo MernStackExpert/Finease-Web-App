@@ -75,7 +75,7 @@ export const router = createBrowserRouter([
         loader: async ({ params }) => {
           const token = localStorage.getItem("access-token");
           const res = await fetch(
-            `http://localhost:3000/transactions/${params.id}`,
+            `https://asigement-server.vercel.apptransactions/${params.id}`,
             {
               headers: {
                 authorization: `Bearer ${token}`,
@@ -99,7 +99,7 @@ export const router = createBrowserRouter([
         loader: async ({ params }) => {
           const token = localStorage.getItem("access-token");
           const res = await fetch(
-            `http://localhost:3000/transactions/${params.id}`,
+            `https://asigement-server.vercel.apptransactions/${params.id}`,
             {
               headers: {
                 authorization: `Bearer ${token}`,

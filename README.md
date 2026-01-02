@@ -1,48 +1,59 @@
-# FinEase - Personal Finance Manager
+# 💰 FinEase - Modern Personal Finance Manager
 
-FinEase is a modern and responsive web application designed to help users manage their personal income and expenses. Users can register, log in, and track all their financial transactions through a clean dashboard. The application also provides insightful charts and reports to visualize financial data effectively.
+FinEase is a professional, feature-rich, and production-standard financial application designed to help users take full control of their economic life. From tracking daily expenses to visualizing long-term income trends with dynamic charts, FinEase offers a seamless and secure experience for managing personal wealth.
 
-### [Live Site URL](https://fineaseasigement.netlify.app/)
+### 🌐 [Live Site URL](https://fineaseasigement.netlify.app/)
 
 ---
-a
+
 ## 🚀 Key Features
 
-* **Full Authentication:** Secure JWT (JSON Web Token) based API authentication with Email/Password and Google Sign-in options via Firebase.
-* **Transaction CRUD:** Full CRUD (Create, Read, Update, Delete) operations for managing both Income and Expenses.
-* **Dynamic Dashboard & Reports:** A real-time financial overview on the Home Page (Current Balance, Total Income, Total Expense) and a detailed Reports Page using Recharts (category-based Pie Chart and monthly Bar Chart).
-* **Filtering and Sorting:** Users can filter reports by month or category and sort their transaction list by date or amount on the server-side.
-*  **UI/UX:** Features a smooth Light/Dark mode toggle and engaging page transitions and card list animations powered by Framer Motion.
-* **Protected Routes:** Secure private routes (like 'My Transactions', 'Reports') that automatically redirect unauthenticated users to the Login page.
+### 📊 Advanced Dashboard & Analytics
+* **Dynamic Overview:** A dedicated dashboard with real-time stats (Balance, Income, Expense) and interactive **Recharts** (Bar & Area charts) to visualize financial flow.
+* **Real-time Data Tables:** Clean and responsive tables populated with live backend data, supporting large datasets with ease.
+
+### 🖼️ Modern Profile & Image Management
+* **Dual-Mode Upload:** Flexible profile picture setup using **ImgBB API** integration for direct file uploads or external URL links.
+* **Instant Preview:** Real-time image preview and upload status indicators for a smooth user experience.
+
+### 🔍 Powerful Search & Navigation
+* **Smart Search:** Server-side search functionality allowing users to find transactions by **Title** with debouncing for performance optimization.
+* **Advanced Filtering:** Multi-criteria sorting (Date, Amount) and category-based filtering to drill down into financial records.
+* **Smooth Pagination:** Efficiently browse through hundreds of records without compromising speed.
+
+### 🔒 Security & Performance
+* **Hybrid Auth:** Secure JWT-based authentication integrated with **Firebase** (Email/Password & Google Login).
+* **Private Dashboard:** Role-based private routes ensuring your financial data is accessible only to you.
+
+### 🎨 Premium UI/UX
+* **Adaptive Theme:** Fully functional **Light/Dark mode** toggle with high-contrast accessibility.
+* **Responsive Layout:** A mobile-first approach with a drawer-based sidebar and sticky navigation.
+* **Framer Motion:** High-quality page transitions and card-loading animations for a modern feel.
 
 ---
 
 ## 🛠️ Technology Stack
 
 ### Client-Side
-
-* **UI Framework:** React.js
-* **Routing:** React Router
-* **Styling:** Tailwind CSS, DaisyUI
-* **Animation:** Framer Motion
-* **State Management:** React Context API
-* **Data Fetching:** Axios (with Custom Hook)
-* **Charts:** Recharts
-* **Notifications:** React Toastify, SweetAlert2
-* **Icons:** React Icons
+- **Framework:** React.js (Vite)
+- **Styling:** Tailwind CSS & DaisyUI
+- **Icons:** React Icons (Lucide, FontAwesome)
+- **Animation:** Framer Motion
+- **Data Visualization:** Recharts
+- **Notifications:** SweetAlert2 & React Toastify
 
 ### Server-Side
+- **Environment:** Node.js
+- **Framework:** Express.js
+- **Database:** MongoDB (Atlas)
+- **Auth:** Firebase Admin & JWT
 
-* **Runtime:** Node.js
-* **Framework:** Express.js
-* **Database:** MongoDB (MongoDB Atlas)
-* **Security:** JWT (JSON Web Token), CORS
+---
 
-### Authentication
+## 📦 Key Packages Used
+- `axios`: For robust API communication.
+- `framer-motion`: For premium UI interactions.
+- `recharts`: For interactive financial data modeling.
+- `react-toastify`: For real-time user feedback.
 
-* Firebase Authentication (Email/Password & Google)
-
-### Deployment
-
-* **Client:** Netlify
-* **Server:** Vercel
+---
