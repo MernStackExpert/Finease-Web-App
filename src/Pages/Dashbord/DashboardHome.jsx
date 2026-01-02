@@ -11,9 +11,7 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Cell,
-  AreaChart,
-  Area
+  Cell
 } from "recharts";
 
 const DashboardHome = () => {
@@ -37,8 +35,8 @@ const DashboardHome = () => {
 
         setStats({ income: inc, expense: exp, balance: inc - exp });
         setChartData([
-          { name: "Total Income", amount: inc, color: "#22c55e" },
-          { name: "Total Expense", amount: exp, color: "#ef4444" },
+          { name: "Income", amount: inc, color: "#22c55e" },
+          { name: "Expense", amount: exp, color: "#ef4444" },
         ]);
       } catch (err) {
         console.log(err);
@@ -53,13 +51,12 @@ const DashboardHome = () => {
         <h2 className="text-3xl font-black uppercase tracking-tight">
           System <span className="text-primary">Overview</span>
         </h2>
-        <p className="text-base-content/50 font-medium">Welcome back, {user?.displayName}! Here's your financial summary.</p>
+        <p className="text-base-content/50 font-medium">Welcome, {user?.displayName}!</p>
       </motion.div>
 
-      {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <motion.div whileHover={{ y: -5 }} className="bg-gradient-to-br from-primary to-secondary p-8 rounded-[2.5rem] shadow-2xl shadow-primary/20 text-white relative overflow-hidden group">
-          <div className="absolute -right-4 -top-4 opacity-10 group-hover:scale-110 transition-transform">
+          <div className="absolute -right-4 -top-4 opacity-10 group-hover:scale-110 transition-transform text-white">
             <FaWallet size={120} />
           </div>
           <FaWallet size={28} className="mb-4 opacity-80" />
@@ -90,53 +87,42 @@ const DashboardHome = () => {
         </motion.div>
       </div>
 
-      {/* Modern Chart Section */}
       <div className="grid grid-cols-1 gap-8">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }} 
-          animate={{ opacity: 1, y: 0 }} 
-          className="bg-base-100 p-8 md:p-10 rounded-[3rem] border border-base-300 shadow-sm"
-        >
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-base-100 p-8 md:p-10 rounded-[3rem] border border-base-300 shadow-sm">
           <div className="flex items-center justify-between mb-10">
             <div>
               <h3 className="text-xl font-black uppercase tracking-tight flex items-center gap-2">
                 <FaChartLine className="text-primary" /> Cash Flow Analytics
               </h3>
-              <p className="text-xs font-bold opacity-40 uppercase tracking-widest mt-1">Income vs Expense Comparison</p>
-            </div>
-            <div className="hidden sm:flex gap-2">
-                <div className="flex items-center gap-2 text-xs font-bold uppercase opacity-60">
-                    <span className="w-3 h-3 rounded-full bg-success"></span> Income
-                </div>
-                <div className="flex items-center gap-2 text-xs font-bold uppercase opacity-60 ml-4">
-                    <span className="w-3 h-3 rounded-full bg-error"></span> Expense
-                </div>
+              <p className="text-xs font-bold opacity-40 uppercase tracking-widest mt-1">Comparison of Income and Expenses</p>
             </div>
           </div>
           
-          <div className="h-[350px] w-full">
+          <div className="h-[350px] w-full text-base-content">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--bc) / 0.1)" />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" opacity={0.1} />
                 <XAxis 
                     dataKey="name" 
                     axisLine={false} 
                     tickLine={false} 
-                    tick={{ fill: 'hsl(var(--bc))', fontWeight: 'bold', fontSize: 12 }}
+                    tick={{ fill: 'currentColor', fontWeight: 'bold', fontSize: 12 }}
                     dy={15}
                 />
                 <YAxis 
                     axisLine={false} 
                     tickLine={false} 
-                    tick={{ fill: 'hsl(var(--bc))', opacity: 0.5, fontSize: 12 }} 
+                    tick={{ fill: 'currentColor', opacity: 0.5, fontSize: 12 }} 
                 />
                 <Tooltip 
-                  cursor={{ fill: 'hsl(var(--bc) / 0.05)' }}
+                  cursor={{ fill: 'currentColor', opacity: 0.05 }}
                   contentStyle={{ 
                     borderRadius: '20px', 
                     border: 'none', 
                     boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)',
-                    padding: '15px'
+                    padding: '15px',
+                    backgroundColor: 'white',
+                    color: '#000'
                   }}
                 />
                 <Bar dataKey="amount" radius={[15, 15, 0, 0]} barSize={80}>

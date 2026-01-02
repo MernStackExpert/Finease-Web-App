@@ -218,6 +218,9 @@ const Navbar = () => {
                 </li>
                 <div className="divider my-0 opacity-20"></div>
                 <li>
+                  <Link onClick={closeMenu} to="/dashboard" className="py-3">Dashbord</Link>
+                </li>
+                <li>
                   <Link onClick={closeMenu} to="/my-profile" className="py-3">My Profile</Link>
                 </li>
                 <li>
