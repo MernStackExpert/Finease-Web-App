@@ -2,7 +2,7 @@
 
 FinEase is a professional, feature-rich, and production-standard financial application designed to help users take full control of their economic life. From tracking daily expenses to visualizing long-term income trends with dynamic charts, FinEase offers a seamless and secure experience for managing personal wealth.
 
-### 🌐 [Live Site URL](https://fineaseasigement.netlify.app/)
+### 🌐 [Live Site URL](https://finease-stand.netlify.app/)
 
 ---
 
